@@ -5,7 +5,7 @@
 # API settings
 API_URL ?= http://172.17.0.1:10000
 OPENAPI_FILE ?= openapi.yaml
-CLIENT_DIR ?= generated_client
+CLIENT_DIR ?= src/penpen/generated_client
 
 help:
 	@echo "Available targets:"
