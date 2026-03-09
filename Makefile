@@ -21,9 +21,7 @@ download-spec:
 
 generate-client:
 	@echo "Generating async Python client (Pydantic V2) from $(OPENAPI_FILE)..."
-	docker run --rm -v "$(PWD):/local" \
-		tiangolo/openapi-python-client \
-		generate --url file:///local/$(OPENAPI_FILE) --output /local/$(CLIENT_DIR) --async
+	openapi-python-client generate --path $(OPENAPI_FILE) --output-path $(CLIENT_DIR) --overwrite
 	@echo "Client generated in $(CLIENT_DIR)/"
 	@echo "Install deps: pip install httpx httpx[http2] pydantic"
 
