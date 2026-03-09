@@ -1,44 +1,34 @@
 from http import HTTPStatus
-from typing import Any, cast
+from typing import Any
 from urllib.parse import quote
 
 import httpx
 
-from ...client import AuthenticatedClient, Client
-from ...types import Response, UNSET
 from ... import errors
-
+from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.http_validation_error import HTTPValidationError
 from ...models.todo_subtask import TodoSubtask
 from ...models.todo_subtask_update import TodoSubtaskUpdate
-from ...types import UNSET, Unset
-from typing import cast
-
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     subtask_id: int,
     *,
     body: TodoSubtaskUpdate | Unset = UNSET,
-
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
-
-    
-
-    
-
     _kwargs: dict[str, Any] = {
         "method": "put",
-        "url": "/todo-subtasks/{subtask_id}".format(subtask_id=quote(str(subtask_id), safe=""),),
+        "url": "/todo-subtasks/{subtask_id}".format(
+            subtask_id=quote(str(subtask_id), safe=""),
+        ),
     }
 
-    
     if not isinstance(body, Unset):
         _kwargs["json"] = body.to_dict()
-
 
     headers["Content-Type"] = "application/json"
 
@@ -46,33 +36,26 @@ def _get_kwargs(
     return _kwargs
 
 
-
-def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Error | HTTPValidationError | TodoSubtask | None:
+def _parse_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Error | HTTPValidationError | TodoSubtask | None:
     if response.status_code == 200:
         response_200 = TodoSubtask.from_dict(response.json())
-
-
 
         return response_200
 
     if response.status_code == 400:
         response_400 = Error.from_dict(response.json())
 
-
-
         return response_400
 
     if response.status_code == 404:
         response_404 = Error.from_dict(response.json())
 
-
-
         return response_404
 
     if response.status_code == 422:
         response_422 = HTTPValidationError.from_dict(response.json())
-
-
 
         return response_422
 
@@ -82,7 +65,9 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
         return None
 
 
-def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[Error | HTTPValidationError | TodoSubtask]:
+def _build_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Response[Error | HTTPValidationError | TodoSubtask]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -96,9 +81,8 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: TodoSubtaskUpdate | Unset = UNSET,
-
 ) -> Response[Error | HTTPValidationError | TodoSubtask]:
-    """ サブタスク更新
+    """サブタスク更新
 
      指定IDのサブタスクを更新する
 
@@ -122,13 +106,11 @@ def sync_detailed(
 
     Returns:
         Response[Error | HTTPValidationError | TodoSubtask]
-     """
-
+    """
 
     kwargs = _get_kwargs(
         subtask_id=subtask_id,
-body=body,
-
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -137,14 +119,14 @@ body=body,
 
     return _build_response(client=client, response=response)
 
+
 def sync(
     subtask_id: int,
     *,
     client: AuthenticatedClient | Client,
     body: TodoSubtaskUpdate | Unset = UNSET,
-
 ) -> Error | HTTPValidationError | TodoSubtask | None:
-    """ サブタスク更新
+    """サブタスク更新
 
      指定IDのサブタスクを更新する
 
@@ -168,24 +150,22 @@ def sync(
 
     Returns:
         Error | HTTPValidationError | TodoSubtask
-     """
-
+    """
 
     return sync_detailed(
         subtask_id=subtask_id,
-client=client,
-body=body,
-
+        client=client,
+        body=body,
     ).parsed
+
 
 async def asyncio_detailed(
     subtask_id: int,
     *,
     client: AuthenticatedClient | Client,
     body: TodoSubtaskUpdate | Unset = UNSET,
-
 ) -> Response[Error | HTTPValidationError | TodoSubtask]:
-    """ サブタスク更新
+    """サブタスク更新
 
      指定IDのサブタスクを更新する
 
@@ -209,29 +189,25 @@ async def asyncio_detailed(
 
     Returns:
         Response[Error | HTTPValidationError | TodoSubtask]
-     """
-
+    """
 
     kwargs = _get_kwargs(
         subtask_id=subtask_id,
-body=body,
-
+        body=body,
     )
 
-    response = await client.get_async_httpx_client().request(
-        **kwargs
-    )
+    response = await client.get_async_httpx_client().request(**kwargs)
 
     return _build_response(client=client, response=response)
+
 
 async def asyncio(
     subtask_id: int,
     *,
     client: AuthenticatedClient | Client,
     body: TodoSubtaskUpdate | Unset = UNSET,
-
 ) -> Error | HTTPValidationError | TodoSubtask | None:
-    """ サブタスク更新
+    """サブタスク更新
 
      指定IDのサブタスクを更新する
 
@@ -255,12 +231,12 @@ async def asyncio(
 
     Returns:
         Error | HTTPValidationError | TodoSubtask
-     """
+    """
 
-
-    return (await asyncio_detailed(
-        subtask_id=subtask_id,
-client=client,
-body=body,
-
-    )).parsed
+    return (
+        await asyncio_detailed(
+            subtask_id=subtask_id,
+            client=client,
+            body=body,
+        )
+    ).parsed

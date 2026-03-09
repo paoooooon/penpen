@@ -1,43 +1,30 @@
 from http import HTTPStatus
-from typing import Any, cast
-from urllib.parse import quote
+from typing import Any
 
 import httpx
 
-from ...client import AuthenticatedClient, Client
-from ...types import Response, UNSET
 from ... import errors
-
+from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.http_validation_error import HTTPValidationError
 from ...models.todo import Todo
 from ...models.todo_create import TodoCreate
-from ...types import UNSET, Unset
-from typing import cast
-
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
     body: TodoCreate | Unset = UNSET,
-
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
-
-
-    
-
-    
 
     _kwargs: dict[str, Any] = {
         "method": "post",
         "url": "/todos",
     }
 
-    
     if not isinstance(body, Unset):
         _kwargs["json"] = body.to_dict()
-
 
     headers["Content-Type"] = "application/json"
 
@@ -45,33 +32,26 @@ def _get_kwargs(
     return _kwargs
 
 
-
-def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Error | HTTPValidationError | Todo | None:
+def _parse_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Error | HTTPValidationError | Todo | None:
     if response.status_code == 200:
         response_200 = Todo.from_dict(response.json())
-
-
 
         return response_200
 
     if response.status_code == 201:
         response_201 = Todo.from_dict(response.json())
 
-
-
         return response_201
 
     if response.status_code == 400:
         response_400 = Error.from_dict(response.json())
 
-
-
         return response_400
 
     if response.status_code == 422:
         response_422 = HTTPValidationError.from_dict(response.json())
-
-
 
         return response_422
 
@@ -81,7 +61,9 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
         return None
 
 
-def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[Error | HTTPValidationError | Todo]:
+def _build_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Response[Error | HTTPValidationError | Todo]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -94,9 +76,8 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: TodoCreate | Unset = UNSET,
-
 ) -> Response[Error | HTTPValidationError | Todo]:
-    """ TODO作成
+    """TODO作成
 
      新しいTODOを作成する
 
@@ -123,12 +104,10 @@ def sync_detailed(
 
     Returns:
         Response[Error | HTTPValidationError | Todo]
-     """
-
+    """
 
     kwargs = _get_kwargs(
         body=body,
-
     )
 
     response = client.get_httpx_client().request(
@@ -137,13 +116,13 @@ def sync_detailed(
 
     return _build_response(client=client, response=response)
 
+
 def sync(
     *,
     client: AuthenticatedClient | Client,
     body: TodoCreate | Unset = UNSET,
-
 ) -> Error | HTTPValidationError | Todo | None:
-    """ TODO作成
+    """TODO作成
 
      新しいTODOを作成する
 
@@ -170,22 +149,20 @@ def sync(
 
     Returns:
         Error | HTTPValidationError | Todo
-     """
-
+    """
 
     return sync_detailed(
         client=client,
-body=body,
-
+        body=body,
     ).parsed
+
 
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: TodoCreate | Unset = UNSET,
-
 ) -> Response[Error | HTTPValidationError | Todo]:
-    """ TODO作成
+    """TODO作成
 
      新しいTODOを作成する
 
@@ -212,27 +189,23 @@ async def asyncio_detailed(
 
     Returns:
         Response[Error | HTTPValidationError | Todo]
-     """
-
+    """
 
     kwargs = _get_kwargs(
         body=body,
-
     )
 
-    response = await client.get_async_httpx_client().request(
-        **kwargs
-    )
+    response = await client.get_async_httpx_client().request(**kwargs)
 
     return _build_response(client=client, response=response)
+
 
 async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: TodoCreate | Unset = UNSET,
-
 ) -> Error | HTTPValidationError | Todo | None:
-    """ TODO作成
+    """TODO作成
 
      新しいTODOを作成する
 
@@ -259,11 +232,11 @@ async def asyncio(
 
     Returns:
         Error | HTTPValidationError | Todo
-     """
+    """
 
-
-    return (await asyncio_detailed(
-        client=client,
-body=body,
-
-    )).parsed
+    return (
+        await asyncio_detailed(
+            client=client,
+            body=body,
+        )
+    ).parsed

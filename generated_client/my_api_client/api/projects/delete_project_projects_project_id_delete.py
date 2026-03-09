@@ -4,37 +4,30 @@ from urllib.parse import quote
 
 import httpx
 
-from ...client import AuthenticatedClient, Client
-from ...types import Response, UNSET
 from ... import errors
-
+from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.http_validation_error import HTTPValidationError
-from typing import cast
-
+from ...types import Response
 
 
 def _get_kwargs(
     project_id: int,
-
 ) -> dict[str, Any]:
-    
-
-    
-
-    
 
     _kwargs: dict[str, Any] = {
         "method": "delete",
-        "url": "/projects/{project_id}".format(project_id=quote(str(project_id), safe=""),),
+        "url": "/projects/{project_id}".format(
+            project_id=quote(str(project_id), safe=""),
+        ),
     }
-
 
     return _kwargs
 
 
-
-def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Any | Error | HTTPValidationError | None:
+def _parse_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Any | Error | HTTPValidationError | None:
     if response.status_code == 200:
         response_200 = response.json()
         return response_200
@@ -46,14 +39,10 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
     if response.status_code == 404:
         response_404 = Error.from_dict(response.json())
 
-
-
         return response_404
 
     if response.status_code == 422:
         response_422 = HTTPValidationError.from_dict(response.json())
-
-
 
         return response_422
 
@@ -63,7 +52,9 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
         return None
 
 
-def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[Any | Error | HTTPValidationError]:
+def _build_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Response[Any | Error | HTTPValidationError]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -76,9 +67,8 @@ def sync_detailed(
     project_id: int,
     *,
     client: AuthenticatedClient | Client,
-
 ) -> Response[Any | Error | HTTPValidationError]:
-    """ プロジェクト削除
+    """プロジェクト削除
 
      指定IDのプロジェクトを削除する
 
@@ -91,12 +81,10 @@ def sync_detailed(
 
     Returns:
         Response[Any | Error | HTTPValidationError]
-     """
-
+    """
 
     kwargs = _get_kwargs(
         project_id=project_id,
-
     )
 
     response = client.get_httpx_client().request(
@@ -105,13 +93,13 @@ def sync_detailed(
 
     return _build_response(client=client, response=response)
 
+
 def sync(
     project_id: int,
     *,
     client: AuthenticatedClient | Client,
-
 ) -> Any | Error | HTTPValidationError | None:
-    """ プロジェクト削除
+    """プロジェクト削除
 
      指定IDのプロジェクトを削除する
 
@@ -124,22 +112,20 @@ def sync(
 
     Returns:
         Any | Error | HTTPValidationError
-     """
-
+    """
 
     return sync_detailed(
         project_id=project_id,
-client=client,
-
+        client=client,
     ).parsed
+
 
 async def asyncio_detailed(
     project_id: int,
     *,
     client: AuthenticatedClient | Client,
-
 ) -> Response[Any | Error | HTTPValidationError]:
-    """ プロジェクト削除
+    """プロジェクト削除
 
      指定IDのプロジェクトを削除する
 
@@ -152,27 +138,23 @@ async def asyncio_detailed(
 
     Returns:
         Response[Any | Error | HTTPValidationError]
-     """
-
+    """
 
     kwargs = _get_kwargs(
         project_id=project_id,
-
     )
 
-    response = await client.get_async_httpx_client().request(
-        **kwargs
-    )
+    response = await client.get_async_httpx_client().request(**kwargs)
 
     return _build_response(client=client, response=response)
+
 
 async def asyncio(
     project_id: int,
     *,
     client: AuthenticatedClient | Client,
-
 ) -> Any | Error | HTTPValidationError | None:
-    """ プロジェクト削除
+    """プロジェクト削除
 
      指定IDのプロジェクトを削除する
 
@@ -185,11 +167,11 @@ async def asyncio(
 
     Returns:
         Any | Error | HTTPValidationError
-     """
+    """
 
-
-    return (await asyncio_detailed(
-        project_id=project_id,
-client=client,
-
-    )).parsed
+    return (
+        await asyncio_detailed(
+            project_id=project_id,
+            client=client,
+        )
+    ).parsed
