@@ -1,33 +1,46 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, TypeVar, cast
+from typing import Any, TypeVar, BinaryIO, TextIO, TYPE_CHECKING, Generator
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
+from ..types import UNSET, Unset
+
 from ..models.todo_subtask_update_status import TodoSubtaskUpdateStatus
 from ..types import UNSET, Unset
+from typing import cast
+
+
+
+
+
 
 T = TypeVar("T", bound="TodoSubtaskUpdate")
 
 
+
 @_attrs_define
 class TodoSubtaskUpdate:
-    """サブタスク更新リクエスト
+    """ サブタスク更新リクエスト
 
-    Attributes:
-        title (str | Unset): サブタスクタイトル Example: サンプルサブタスク.
-        description (None | str | Unset): サブタスクの説明 Example: これはサンプルサブタスクです.
-        status (TodoSubtaskUpdateStatus | Unset): ステータス Example: completed.
-        sort_order (int | Unset): 表示順序 Example: 1.
-    """
+        Attributes:
+            title (str | Unset): サブタスクタイトル Example: サンプルサブタスク.
+            description (None | str | Unset): サブタスクの説明 Example: これはサンプルサブタスクです.
+            status (TodoSubtaskUpdateStatus | Unset): ステータス Example: completed.
+            sort_order (int | Unset): 表示順序 Example: 1.
+     """
 
     title: str | Unset = UNSET
     description: None | str | Unset = UNSET
     status: TodoSubtaskUpdateStatus | Unset = UNSET
     sort_order: int | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
+
+
+
+
 
     def to_dict(self) -> dict[str, Any]:
         title = self.title
@@ -42,11 +55,14 @@ class TodoSubtaskUpdate:
         if not isinstance(self.status, Unset):
             status = self.status.value
 
+
         sort_order = self.sort_order
+
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({})
+        field_dict.update({
+        })
         if title is not UNSET:
             field_dict["title"] = title
         if description is not UNSET:
@@ -57,6 +73,8 @@ class TodoSubtaskUpdate:
             field_dict["sort_order"] = sort_order
 
         return field_dict
+
+
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
@@ -72,12 +90,16 @@ class TodoSubtaskUpdate:
 
         description = _parse_description(d.pop("description", UNSET))
 
+
         _status = d.pop("status", UNSET)
         status: TodoSubtaskUpdateStatus | Unset
-        if isinstance(_status, Unset):
+        if isinstance(_status,  Unset):
             status = UNSET
         else:
             status = TodoSubtaskUpdateStatus(_status)
+
+
+
 
         sort_order = d.pop("sort_order", UNSET)
 
@@ -87,6 +109,7 @@ class TodoSubtaskUpdate:
             status=status,
             sort_order=sort_order,
         )
+
 
         todo_subtask_update.additional_properties = d
         return todo_subtask_update

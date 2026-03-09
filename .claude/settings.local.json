@@ -17,7 +17,9 @@
       "Bash(git:*)",
       "WebSearch",
       "Bash(openapi-python-client generate:*)",
-      "Bash(pip show:*)"
+      "Bash(pip show:*)",
+      "Bash(make download-spec:*)",
+      "Bash(make generate-client:*)"
     ]
   },
   "hooks": {

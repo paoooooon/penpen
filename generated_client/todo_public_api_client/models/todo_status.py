@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class TodoStatus(str, Enum):
     CANCELLED = "cancelled"
     COMPLETED = "completed"

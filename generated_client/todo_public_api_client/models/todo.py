@@ -1,40 +1,49 @@
 from __future__ import annotations
 
-import datetime
 from collections.abc import Mapping
-from typing import Any, TypeVar, cast
-from uuid import UUID
+from typing import Any, TypeVar, BinaryIO, TextIO, TYPE_CHECKING, Generator
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
-from dateutil.parser import isoparse
+
+from ..types import UNSET, Unset
 
 from ..models.todo_priority import TodoPriority
 from ..models.todo_status import TodoStatus
 from ..types import UNSET, Unset
+from dateutil.parser import isoparse
+from typing import cast
+from uuid import UUID
+import datetime
+
+
+
+
+
 
 T = TypeVar("T", bound="Todo")
 
 
+
 @_attrs_define
 class Todo:
-    """TODO情報
+    """ TODO情報
 
-    Attributes:
-        id (int): TODO ID Example: 1.
-        worker_id (int): 作業者ID Example: 1.
-        title (str): TODOタイトル Example: サンプルTODO.
-        status (TodoStatus): ステータス Example: todo.
-        priority (TodoPriority): 優先度 Example: medium.
-        created_at (datetime.datetime): 作成日時 Example: 2024-01-01T00:00:00Z.
-        updated_at (datetime.datetime): 更新日時 Example: 2024-01-01T00:00:00Z.
-        uuid (None | Unset | UUID): UUID Example: 550e8400-e29b-41d4-a716-446655440000.
-        project_id (int | None | Unset): プロジェクトID Example: 1.
-        agent_id (int | None | Unset): エージェントID Example: 1.
-        description (None | str | Unset): TODOの説明 Example: これはサンプルTODOです.
-        due_date (datetime.datetime | None | Unset): 期限日時 Example: 2024-12-31T23:59:59Z.
-        completed_at (datetime.datetime | None | Unset): 完了日時
-    """
+        Attributes:
+            id (int): TODO ID Example: 1.
+            worker_id (int): 作業者ID Example: 1.
+            title (str): TODOタイトル Example: サンプルTODO.
+            status (TodoStatus): ステータス Example: todo.
+            priority (TodoPriority): 優先度 Example: medium.
+            created_at (datetime.datetime): 作成日時 Example: 2024-01-01T00:00:00Z.
+            updated_at (datetime.datetime): 更新日時 Example: 2024-01-01T00:00:00Z.
+            uuid (None | Unset | UUID): UUID Example: 550e8400-e29b-41d4-a716-446655440000.
+            project_id (int | None | Unset): プロジェクトID Example: 1.
+            agent_id (int | None | Unset): エージェントID Example: 1.
+            description (None | str | Unset): TODOの説明 Example: これはサンプルTODOです.
+            due_date (datetime.datetime | None | Unset): 期限日時 Example: 2024-12-31T23:59:59Z.
+            completed_at (datetime.datetime | None | Unset): 完了日時
+     """
 
     id: int
     worker_id: int
@@ -50,6 +59,10 @@ class Todo:
     due_date: datetime.datetime | None | Unset = UNSET
     completed_at: datetime.datetime | None | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
+
+
+
+
 
     def to_dict(self) -> dict[str, Any]:
         id = self.id
@@ -108,19 +121,18 @@ class Todo:
         else:
             completed_at = self.completed_at
 
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update(
-            {
-                "id": id,
-                "worker_id": worker_id,
-                "title": title,
-                "status": status,
-                "priority": priority,
-                "created_at": created_at,
-                "updated_at": updated_at,
-            }
-        )
+        field_dict.update({
+            "id": id,
+            "worker_id": worker_id,
+            "title": title,
+            "status": status,
+            "priority": priority,
+            "created_at": created_at,
+            "updated_at": updated_at,
+        })
         if uuid is not UNSET:
             field_dict["uuid"] = uuid
         if project_id is not UNSET:
@@ -136,6 +148,8 @@ class Todo:
 
         return field_dict
 
+
+
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
@@ -147,11 +161,23 @@ class Todo:
 
         status = TodoStatus(d.pop("status"))
 
+
+
+
         priority = TodoPriority(d.pop("priority"))
+
+
+
 
         created_at = isoparse(d.pop("created_at"))
 
+
+
+
         updated_at = isoparse(d.pop("updated_at"))
+
+
+
 
         def _parse_uuid(data: object) -> None | Unset | UUID:
             if data is None:
@@ -163,12 +189,15 @@ class Todo:
                     raise TypeError()
                 uuid_type_0 = UUID(data)
 
+
+
                 return uuid_type_0
             except (TypeError, ValueError, AttributeError, KeyError):
                 pass
             return cast(None | Unset | UUID, data)
 
         uuid = _parse_uuid(d.pop("uuid", UNSET))
+
 
         def _parse_project_id(data: object) -> int | None | Unset:
             if data is None:
@@ -179,6 +208,7 @@ class Todo:
 
         project_id = _parse_project_id(d.pop("project_id", UNSET))
 
+
         def _parse_agent_id(data: object) -> int | None | Unset:
             if data is None:
                 return data
@@ -188,6 +218,7 @@ class Todo:
 
         agent_id = _parse_agent_id(d.pop("agent_id", UNSET))
 
+
         def _parse_description(data: object) -> None | str | Unset:
             if data is None:
                 return data
@@ -196,6 +227,7 @@ class Todo:
             return cast(None | str | Unset, data)
 
         description = _parse_description(d.pop("description", UNSET))
+
 
         def _parse_due_date(data: object) -> datetime.datetime | None | Unset:
             if data is None:
@@ -207,12 +239,15 @@ class Todo:
                     raise TypeError()
                 due_date_type_0 = isoparse(data)
 
+
+
                 return due_date_type_0
             except (TypeError, ValueError, AttributeError, KeyError):
                 pass
             return cast(datetime.datetime | None | Unset, data)
 
         due_date = _parse_due_date(d.pop("due_date", UNSET))
+
 
         def _parse_completed_at(data: object) -> datetime.datetime | None | Unset:
             if data is None:
@@ -224,12 +259,15 @@ class Todo:
                     raise TypeError()
                 completed_at_type_0 = isoparse(data)
 
+
+
                 return completed_at_type_0
             except (TypeError, ValueError, AttributeError, KeyError):
                 pass
             return cast(datetime.datetime | None | Unset, data)
 
         completed_at = _parse_completed_at(d.pop("completed_at", UNSET))
+
 
         todo = cls(
             id=id,
@@ -246,6 +284,7 @@ class Todo:
             due_date=due_date,
             completed_at=completed_at,
         )
+
 
         todo.additional_properties = d
         return todo

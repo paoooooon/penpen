@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class TodoPriority(str, Enum):
     HIGH = "high"
     LOW = "low"
