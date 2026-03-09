@@ -19,7 +19,8 @@
       "Bash(openapi-python-client generate:*)",
       "Bash(pip show:*)",
       "Bash(make download-spec:*)",
-      "Bash(make generate-client:*)"
+      "Bash(make generate-client:*)",
+      "Bash(chmod +x:*)"
     ]
   },
   "hooks": {
