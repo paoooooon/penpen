@@ -20,7 +20,8 @@
       "Bash(pip show:*)",
       "Bash(make download-spec:*)",
       "Bash(make generate-client:*)",
-      "Bash(chmod +x:*)"
+      "Bash(chmod +x:*)",
+      "Bash(sqlite3:*)"
     ]
   },
   "hooks": {

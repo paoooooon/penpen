@@ -77,6 +77,40 @@ check_python() {
     fi
 }
 
+# Check and install sqlite3 command
+check_sqlite3() {
+    if command -v sqlite3 &> /dev/null; then
+        echo "sqlite3 is already installed"
+        return 0
+    fi
+
+    echo "sqlite3 command not found, installing..."
+
+    if command -v apt-get &> /dev/null; then
+        apt-get update && apt-get install -y sqlite3
+    elif command -v apk &> /dev/null; then
+        apk add --no-cache sqlite
+    elif command -v yum &> /dev/null; then
+        yum install -y sqlite
+    elif command -v dnf &> /dev/null; then
+        dnf install -y sqlite
+    elif command -v pacman &> /dev/null; then
+        pacman -S --noconfirm sqlite
+    elif command -v brew &> /dev/null; then
+        brew install sqlite
+    else
+        echo "Error: Could not install sqlite3. Please install it manually."
+        exit 1
+    fi
+
+    if command -v sqlite3 &> /dev/null; then
+        echo "sqlite3 installed successfully"
+    else
+        echo "Error: sqlite3 installation failed"
+        exit 1
+    fi
+}
+
 # Create and activate virtual environment
 setup_venv() {
     if [ "$SKIP_VENV" = true ]; then
@@ -174,6 +208,7 @@ generate_client() {
 # Main execution
 main() {
     check_python
+    check_sqlite3
     setup_venv
     install_deps
     generate_client
