@@ -3,26 +3,26 @@ penpen CLI - APIクライアントツール
 """
 
 import argparse
-import asyncio
 import os
+import subprocess
 
-from .generated_client.todo_public_api_client import Client
-from .generated_client.todo_public_api_client.models import TodoCreate
+from penpen.generated_client.todo_public_api_client import Client
+from penpen.generated_client.todo_public_api_client.models import TodoCreate, TodoCreateStatus, TodoCreatePriority
 
-from .generated_client.todo_public_api_client.api.todos.list_todos import asyncio_detailed as list_todos
-from .generated_client.todo_public_api_client.api.todos.create_todo import asyncio_detailed as create_todo
+from penpen.generated_client.todo_public_api_client.api.todos.list_todos import sync_detailed as list_todos
+from penpen.generated_client.todo_public_api_client.api.todos.create_todo import sync_detailed as create_todo
 
-API_BASE_URL = os.environ.get("API_BASE_URL", "http://localhost:10000")
+API_BASE_URL = os.environ.get("API_BASE_URL", "http://172.17.0.1:10000")
 
 
-async def async_example():
-    """非同期クライアントの使用例"""
-    print("=== 非同期クライアントの例 ===\n")
+def sync_example():
+    """同期クライアントの使用例"""
+    print("=== 同期クライアントの例 ===\n")
 
-    async with Client(base_url=API_BASE_URL) as client:
+    with Client(base_url=API_BASE_URL) as client:
         # TODO一覧を取得
         print("TODO一覧を取得...")
-        response = await list_todos(client=client)
+        response = list_todos(client=client)
         print(f"ステータスコード: {response.status_code}")
         if response.parsed:
             for todo in response.parsed:
@@ -35,16 +35,46 @@ async def async_example():
         # 新しいTODOを作成
         print("新しいTODOを作成...")
         new_todo = TodoCreate(
-            worker_id=1,
             title="penpenコマンドテスト",
             description="penpenコマンドから作成したTODO",
-            status="pending",
-            priority="high"
+            status=TodoCreateStatus.TODO,
+            priority=TodoCreatePriority.HIGH
         )
-        response = await create_todo(client=client, body=new_todo)
+        response = create_todo(client=client, body=new_todo)
         print(f"ステータスコード: {response.status_code}")
         if response.parsed:
             print(f"作成されたTODO: ID={response.parsed.id}, Title={response.parsed.title}")
+
+
+def run_claude_command(message):
+    """Claude Codeでコミットを実行"""
+    env = os.environ.copy()
+    env["ANTHROPIC_AUTH_TOKEN"] = "ollama"
+    env["ANTHROPIC_API_KEY"] = ""
+    env["ANTHROPIC_BASE_URL"] = "http://localhost:11434"
+    env["OLLAMA_CONTEXT_LENGTH"] = "65536"
+
+    cmd = [
+        "claude",
+        "--model", "glm-5:cloud",
+        "--output-format", "stream-json",
+        "--verbose",
+        "--include-partial-messages",
+        "--allowedTools", "Read,Edit,Bash",
+        "-p", message
+    ]
+
+
+    print("=== Claude Code コミット実行 ===\n")
+    print(f"コマンド: {' '.join(cmd)}\n")
+
+    try:
+        result = subprocess.run(cmd, env=env, check=True)
+        print(f"\n終了コード: {result.returncode}")
+    except subprocess.CalledProcessError as e:
+        print(f"\nエラー: {e}")
+    except FileNotFoundError:
+        print("エラー: claudeコマンドが見つかりません")
 
 
 def main():
@@ -55,13 +85,9 @@ def main():
     )
     parser.parse_args()
 
-    print("penpen - APIクライアントツール\n")
-    print(f"API URL: {API_BASE_URL}\n")
-
-    try:
-        asyncio.run(async_example())
-    except Exception as e:
-        print(f"エラー: {e}")
+    sync_example()
+    # Claude Codeでコミット実行
+    run_claude_command("適度な粒度でコミットして　メッセージは日本語で　必要に応じて、.gitignoreを追加して")
 
 
 if __name__ == "__main__":
