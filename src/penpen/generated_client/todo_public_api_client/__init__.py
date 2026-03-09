@@ -1,5 +1,5 @@
+"""A client library for accessing Todo Public API"""
 
-""" A client library for accessing Todo Public API """
 from .client import AuthenticatedClient, Client
 
 __all__ = (

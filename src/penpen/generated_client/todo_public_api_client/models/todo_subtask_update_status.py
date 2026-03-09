@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class TodoSubtaskUpdateStatus(str, Enum):
     CANCELLED = "cancelled"
     COMPLETED = "completed"

@@ -232,25 +232,10 @@ components:
           type: integer
           description: TODO ID
           example: 1
-        uuid:
-          type: string
-          format: uuid
-          nullable: true
-          description: UUID
-          example: 550e8400-e29b-41d4-a716-446655440000
         project_id:
           type: integer
           nullable: true
           description: プロジェクトID
-          example: 1
-        worker_id:
-          type: integer
-          description: 作業者ID
-          example: 1
-        agent_id:
-          type: integer
-          nullable: true
-          description: エージェントID
           example: 1
         title:
           type: string
@@ -303,7 +288,6 @@ components:
           example: '2024-01-01T00:00:00Z'
       required:
         - id
-        - worker_id
         - title
         - status
         - priority
@@ -317,15 +301,6 @@ components:
           type: integer
           nullable: true
           description: プロジェクトID
-          example: 1
-        worker_id:
-          type: integer
-          description: 作業者ID
-          example: 1
-        agent_id:
-          type: integer
-          nullable: true
-          description: エージェントID
           example: 1
         title:
           type: string
@@ -363,7 +338,6 @@ components:
           description: 期限日時
           example: '2024-12-31T23:59:59Z'
       required:
-        - worker_id
         - title
     TodoUpdate:
       type: object
@@ -373,15 +347,6 @@ components:
           type: integer
           nullable: true
           description: プロジェクトID
-          example: 1
-        worker_id:
-          type: integer
-          description: 作業者ID
-          example: 1
-        agent_id:
-          type: integer
-          nullable: true
-          description: エージェントID
           example: 1
         title:
           type: string
@@ -424,12 +389,6 @@ components:
           type: integer
           description: サブタスクID
           example: 1
-        uuid:
-          type: string
-          format: uuid
-          nullable: true
-          description: UUID
-          example: 550e8400-e29b-41d4-a716-446655440000
         todo_id:
           type: integer
           description: 親TODOのID
