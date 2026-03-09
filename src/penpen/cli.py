@@ -10,15 +10,8 @@ from pathlib import Path
 from penpen.executor import run_claude_command
 from penpen.prompts import prompt_commit, prompt_todo, prompt_task, prompt_run
 
-API_BASE_URL = os.environ.get("API_BASE_URL", "http://172.17.0.1:10000")
 DB_PATH = os.environ.get("DB_PATH", "/workspace/penpen.db")
 SCHEMA_PATH = Path(__file__).parent.parent / "schema.sql"
-
-
-def cmd_commit(args):
-    """Claude Codeでコミットを実行"""
-    prompt = prompt_commit()
-    return run_claude_command(prompt)
 
 
 def get_incomplete_subtasks_count(db_path=None):
@@ -36,6 +29,12 @@ def get_incomplete_subtasks_count(db_path=None):
     except sqlite3.Error as e:
         print(f"データベースエラー: {e}")
         return -1
+
+
+def cmd_commit(args):
+    """Claude Codeでコミットを実行"""
+    prompt = prompt_commit()
+    return run_claude_command(prompt)
 
 
 def cmd_db_init(args):
@@ -89,7 +88,6 @@ def main():
     parser = argparse.ArgumentParser(
         prog="penpen",
         description="APIクライアントツール",
-        epilog="環境変数: API_BASE_URL - APIのベースURL (デフォルト: http://localhost:10000)"
     )
     subparsers = parser.add_subparsers(dest="command", help="利用可能なコマンド")
 

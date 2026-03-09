@@ -1,19 +1,15 @@
 #!/bin/bash
-# Install script for OpenAPI Python Client project
+# Install script for penpen CLI tool
 # Usage: ./install.sh [OPTIONS]
 #
 # Options:
 #   --skip-venv    Skip virtual environment creation (use existing)
-#   --skip-client  Skip client generation
-#   --api-url      API URL for downloading OpenAPI spec (default: http://172.17.0.1:10000)
 #   -h, --help     Show this help message
 
 set -e
 
 # Default values
 SKIP_VENV=false
-SKIP_CLIENT=false
-API_URL="http://172.17.0.1:10000"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Parse arguments
@@ -23,24 +19,13 @@ while [[ $# -gt 0 ]]; do
             SKIP_VENV=true
             shift
             ;;
-        --skip-client)
-            SKIP_CLIENT=true
-            shift
-            ;;
-        --api-url)
-            API_URL="$2"
-            shift 2
-            ;;
         -h|--help)
-            echo "Install script for OpenAPI Python Client project"
+            echo "Install script for penpen CLI tool"
             echo ""
             echo "Usage: $0 [OPTIONS]"
             echo ""
             echo "Options:"
             echo "  --skip-venv    Skip virtual environment creation (use existing)"
-            echo "  --skip-client  Skip client generation"
-            echo "  --api-url      API URL for downloading OpenAPI spec"
-            echo "                 (default: http://172.17.0.1:10000)"
             echo "  -h, --help     Show this help message"
             exit 0
             ;;
@@ -51,7 +36,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-echo "=== OpenAPI Python Client Installer ==="
+echo "=== penpen Installer ==="
 echo ""
 
 # Check Python version
@@ -145,12 +130,6 @@ install_deps() {
         pip install -r "$SCRIPT_DIR/requirements.txt"
     fi
 
-    # Install openapi-python-client for client generation
-    pip install openapi-python-client
-
-    # Install dev dependencies for code formatting (optional)
-    pip install black isort 2>/dev/null || true
-
     # Install the penpen package in development mode
     if [ -f "$SCRIPT_DIR/pyproject.toml" ]; then
         pip install -e "$SCRIPT_DIR"
@@ -160,58 +139,12 @@ install_deps() {
     echo "Dependencies installed successfully"
 }
 
-# Generate client from OpenAPI spec
-generate_client() {
-    if [ "$SKIP_CLIENT" = true ]; then
-        echo ""
-        echo "Skipping client generation (--skip-client)"
-        return
-    fi
-
-    echo ""
-    echo "Downloading OpenAPI spec from $API_URL..."
-
-    OPENAPI_FILE="$SCRIPT_DIR/openapi.yaml"
-    CLIENT_DIR="$SCRIPT_DIR/generated_client"
-
-    # Try to download OpenAPI spec
-    if curl -sf "$API_URL/openapi.yaml" -o "$OPENAPI_FILE" 2>/dev/null; then
-        echo "Downloaded OpenAPI spec to $OPENAPI_FILE"
-    elif curl -sf "$API_URL/pao/openapi.yaml" -o "$OPENAPI_FILE" 2>/dev/null; then
-        echo "Downloaded OpenAPI spec from alternate endpoint to $OPENAPI_FILE"
-    else
-        echo "Warning: Could not download OpenAPI spec from $API_URL"
-        echo "Please run 'make download-spec API_URL=<url>' manually or ensure the API is running"
-        if [ -f "$OPENAPI_FILE" ]; then
-            echo "Using existing openapi.yaml file"
-        else
-            echo "Error: No OpenAPI spec available"
-            return 1
-        fi
-    fi
-
-    # Generate client if openapi file exists
-    if [ -f "$OPENAPI_FILE" ]; then
-        echo ""
-        echo "Generating Python client..."
-        if command -v openapi-python-client &> /dev/null; then
-            openapi-python-client generate --path "$OPENAPI_FILE" --output-path "$CLIENT_DIR" --overwrite
-            echo "Client generated in $CLIENT_DIR/"
-        else
-            echo "Generating client using module..."
-            python -m openapi_python_client generate --path "$OPENAPI_FILE" --output-path "$CLIENT_DIR" --overwrite
-            echo "Client generated in $CLIENT_DIR/"
-        fi
-    fi
-}
-
 # Main execution
 main() {
     check_python
     check_sqlite3
     setup_venv
     install_deps
-    generate_client
 
     echo ""
     echo "=== Installation Complete ==="
@@ -219,8 +152,10 @@ main() {
     echo "To activate the virtual environment, run:"
     echo "  source .venv/bin/activate"
     echo ""
-    echo "To run the example:"
-    echo "  python main.py"
+    echo "Usage:"
+    echo "  penpen --help"
+    echo "  penpen todo -m \"タスク内容\""
+    echo "  penpen commit"
     echo ""
 }
 
