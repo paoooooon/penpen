@@ -4,7 +4,7 @@
 
 # API settings
 API_URL ?= http://172.17.0.1:10000
-OPENAPI_FILE ?= openapi.json
+OPENAPI_FILE ?= openapi.yaml
 CLIENT_DIR ?= generated_client
 
 help:
@@ -16,7 +16,7 @@ help:
 
 download-spec:
 	@echo "Downloading OpenAPI spec from $(API_URL)..."
-	curl -s $(API_URL)/openapi.json -o $(OPENAPI_FILE)
+	curl -s $(API_URL)/openapi.yaml -o $(OPENAPI_FILE)
 	@echo "Downloaded to $(OPENAPI_FILE)"
 
 generate-client:

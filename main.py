@@ -39,78 +39,6 @@ from generated_client.my_api_client.api.current_project import (
 API_BASE_URL = os.environ.get("API_BASE_URL", "http://localhost:10000")
 
 
-def sync_example():
-    """同期クライアントの使用例"""
-    print("=== 同期クライアントの例 ===\n")
-
-    with Client(base_url=API_BASE_URL) as client:
-        # ヘルスチェック
-        print("ヘルスチェック...")
-        response = get_health_health_get.sync_detailed(client=client)
-        print(f"ステータスコード: {response.status_code}")
-        if response.parsed:
-            print(f"  Status: {response.parsed.status}")
-
-        print()
-
-        # プロジェクト一覧を取得
-        print("プロジェクト一覧を取得...")
-        response = list_projects_projects_get.sync_detailed(client=client)
-        if response.parsed:
-            print(f"ステータスコード: {response.status_code}")
-            for project in response.parsed:
-                print(f"  - ID: {project.id}, Name: {project.name}")
-        else:
-            print("プロジェクトが見つかりません")
-
-        print()
-
-        # TODO一覧を取得
-        print("TODO一覧を取得...")
-        response = list_todos_todos_get.sync_detailed(client=client)
-        if response.parsed:
-            print(f"ステータスコード: {response.status_code}")
-            for todo in response.parsed:
-                print(f"  - ID: {todo.id}, Title: {todo.title}, Status: {todo.status}")
-        else:
-            print("TODOが見つかりません")
-
-        print()
-
-        # 新しいプロジェクトを作成
-        print("新しいプロジェクトを作成...")
-        new_project = ProjectCreate(
-            name="テストプロジェクト",
-            description="APIクライアントから作成したプロジェクト"
-        )
-        response = create_project_projects_post.sync_detailed(
-            client=client,
-            body=new_project
-        )
-        print(f"ステータスコード: {response.status_code}")
-        if response.parsed:
-            print(f"作成されたプロジェクト: ID={response.parsed.id}, Name={response.parsed.name}")
-
-        print()
-
-        # 新しいTODOを作成
-        print("新しいTODOを作成...")
-        new_todo = TodoCreate(
-            worker_id=1,
-            title="APIクライアントテスト",
-            description="生成されたクライアントから作成したTODO",
-            status="pending",
-            priority="medium"
-        )
-        response = create_todo_todos_post.sync_detailed(
-            client=client,
-            body=new_todo
-        )
-        print(f"ステータスコード: {response.status_code}")
-        if response.parsed:
-            print(f"作成されたTODO: ID={response.parsed.id}, Title={response.parsed.title}")
-
-
 async def async_example():
     """非同期クライアントの使用例"""
     print("=== 非同期クライアントの例 ===\n")
@@ -212,14 +140,6 @@ async def concurrent_requests_example():
 def main():
     print("APIクライアント使用例\n")
     print(f"API URL: {API_BASE_URL}\n")
-
-    # 同期クライアントの例
-    try:
-        sync_example()
-    except Exception as e:
-        print(f"同期クライアントエラー: {e}")
-
-    print("\n" + "=" * 50 + "\n")
 
     # 非同期クライアントの例
     try:
