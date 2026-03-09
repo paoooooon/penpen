@@ -30,6 +30,9 @@ ENV/
 .coverage
 htmlcov/
 
+# Linting
+.ruff_cache/
+
 # IDE
 .idea/
 .vscode/
