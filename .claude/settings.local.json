@@ -14,7 +14,10 @@
       "Bash(echo:*)",
       "Bash(source:*)",
       "Bash(.venv/bin/pytest:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "WebSearch",
+      "Bash(openapi-python-client generate:*)",
+      "Bash(pip show:*)"
     ]
   },
   "hooks": {
