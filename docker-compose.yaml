@@ -1,0 +1,13 @@
+services:
+  penpen-dev-container:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: penpen-dev-container 
+    volumes:
+      - .:/workspace
+      - ollama-data-penpen:/root/.ollama
+
+volumes:
+  ollama-data-penpen:
+    driver: local
