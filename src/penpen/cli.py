@@ -3,19 +3,18 @@ penpen CLI - APIクライアントツール
 """
 
 import argparse
-import os
 import sqlite3
 from pathlib import Path
 
 import setproctitle
 
+from penpen.env import DB_PATH
 from penpen.executor import run_claude_command
 from penpen.prompts import prompt_commit, prompt_todo, prompt_task, prompt_run
 
 # プロセス名を設定
 setproctitle.setproctitle("penpen")
 
-DB_PATH = os.environ.get("DB_PATH", os.path.join(os.getcwd(), "penpen.db"))
 SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 
 
@@ -109,7 +108,7 @@ def cmd_run(args):
 def main():
     parser = argparse.ArgumentParser(
         prog="penpen",
-        usage="penpen {commit,db-init,todo,task,run} ... [-h]",
+        usage="penpen {commit,init-db,todo,task,run} ... [-h]",
         description="Claude Code を使用したタスク管理・実行ツール",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
@@ -118,7 +117,7 @@ def main():
   penpen task -m "フロントエンドの実装"     タスクを分解してサブタスク作成
   penpen run                               サブタスクを実行
   penpen commit                            コミットを実行
-  penpen db-init                           データベースを初期化
+  penpen init-db                           データベースを初期化
 
 環境変数:
   DB_PATH         データベースファイルのパス (デフォルト: /workspace/penpen.db)
@@ -130,8 +129,8 @@ def main():
     commit_parser = subparsers.add_parser("commit", help="Claude Codeでコミットを実行")
     commit_parser.set_defaults(func=cmd_commit)
 
-    # db-init サブコマンド
-    db_init_parser = subparsers.add_parser("db-init", help="スキーマからデータベースを初期化")
+    # init-db サブコマンド
+    db_init_parser = subparsers.add_parser("init-db", help="スキーマからデータベースを初期化")
     db_init_parser.add_argument("--db-path", default=DB_PATH, help=f"データベースファイルのパス (デフォルト: {DB_PATH})")
     db_init_parser.add_argument("--schema-path", help=f"スキーマファイルのパス (デフォルト: {SCHEMA_PATH})")
     db_init_parser.set_defaults(func=cmd_db_init)

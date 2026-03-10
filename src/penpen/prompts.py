@@ -2,9 +2,7 @@
 プロンプト生成モジュール
 """
 
-import os
-
-DB_PATH = os.environ.get("DB_PATH", "/workspace/penpen.db")
+from penpen.env import DB_PATH
 
 
 def prompt_commit() -> str:
