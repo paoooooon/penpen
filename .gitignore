@@ -46,3 +46,6 @@ penpen.db
 .env.Don't_touch_the_AI.db
 *.db
 script.sh
+
+# Go
+go/penpen
