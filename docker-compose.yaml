@@ -3,10 +3,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: penpen-dev-container 
+    container_name: penpen-dev-container
     volumes:
       - .:/workspace
       - ollama-data-penpen:/root/.ollama
+
+  install-server:
+    image: nginx:alpine
+    container_name: penpen-install-server
+    ports:
+      - "10000:80"
+    volumes:
+      - ./install-server/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./install-server/install.sh:/usr/share/nginx/html/install.sh:ro
+      - ./pyproject.toml:/usr/share/nginx/html/files/pyproject.toml:ro
+      - ./requirements.txt:/usr/share/nginx/html/files/requirements.txt:ro
+      - ./src/penpen:/usr/share/nginx/html/files/src/penpen:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   ollama-data-penpen:
