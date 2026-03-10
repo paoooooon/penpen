@@ -55,7 +55,7 @@ download_files() {
 
     # Source files
     mkdir -p "$INSTALL_DIR/src/penpen"
-    for file in __init__.py __main__.py cli.py executor.py prompts.py schema.sql; do
+    for file in __init__.py __main__.py cli.py executor.py prompts.py env.py schema.sql; do
         curl -sf "$INSTALL_SERVER/files/src/penpen/$file" -o "$INSTALL_DIR/src/penpen/$file"
         echo "  Downloaded src/penpen/$file"
     done
