@@ -91,8 +91,15 @@ def cmd_run(args):
     print(f"未完了サブタスク数: {count}")
     for i in range(count):
         print(f"\n--- サブタスク {i+1}/{count} ---")
+        #サブタスクの実行
         prompt = prompt_run()
         result = run_claude_command(prompt)
+
+        print(f"\n--- コミット{i+1}/{count} ---")
+        #コミットの実行
+        prompt = prompt_commit()
+        run_claude_command(prompt)
+
         if result != 0:
             print(f"サブタスク実行エラー (終了コード: {result})")
             return result
