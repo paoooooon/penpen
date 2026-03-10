@@ -84,9 +84,19 @@ def cmd_task(args):
 def cmd_run(args):
     """サブタスクを実行"""
     count = get_incomplete_subtasks_count()
+    if count == 0:
+        print("実行するサブタスクがありません")
+        return 0
+
+    print(f"未完了サブタスク数: {count}")
     for i in range(count):
+        print(f"\n--- サブタスク {i+1}/{count} ---")
         prompt = prompt_run()
-        return run_claude_command(prompt)
+        result = run_claude_command(prompt)
+        if result != 0:
+            print(f"サブタスク実行エラー (終了コード: {result})")
+            return result
+    return 0
 
 
 def main():
