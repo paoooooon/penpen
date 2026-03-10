@@ -18,8 +18,7 @@ curl -sSL http://172.17.0.1:10000/install.sh | INSTALL_SERVER=http://172.17.0.1:
 
 | パス | 内容 |
 |-----|------|
-| `~/.local/share/penpen/` | ソースコード、仮想環境 |
-| `~/.local/bin/penpen` | 実行可能ファイル |
+| `~/.local/bin/penpen` | 実行可能バイナリ |
 
 ### カスタムインストール先
 
@@ -97,11 +96,18 @@ penpen commit
 ## モジュール構成
 
 ```
-src/penpen/
-├── cli.py        # CLIエントリーポイント
-├── executor.py   # 実行レイヤー（Claude Code実行）
-├── prompts.py    # プロンプト生成レイヤー
-└── __main__.py   # python -m penpen 用エントリ
+go/
+├── cmd/penpen/main.go    # CLIエントリーポイント
+├── internal/
+│   ├── cli/              # CLIハンドラー
+│   ├── database/         # SQLiteデータベース操作
+│   ├── executor/         # Claude Code実行
+│   ├── prompts/          # プロンプト生成
+│   ├── env/              # 環境変数管理
+│   └── schema/           # スキーマ埋め込み
+├── go.mod
+├── go.sum
+└── penpen                # ビルド済みバイナリ
 ```
 
 ## データベース構成
@@ -125,16 +131,28 @@ src/penpen/
 
 ## 開発
 
-### セットアップ
+### ビルド
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
+# Go版バイナリをビルド
+make build
+
+# または直接実行
+cd go && go build -o penpen ./cmd/penpen
 ```
 
 ### テスト実行
 
 ```bash
-python -m penpen --help
+make test
+
+# または
+cd go && go test ./...
+```
+
+### ローカル開発
+
+```bash
+# 直接実行
+cd go && go run ./cmd/penpen --help
 ```
