@@ -7,11 +7,16 @@ import os
 import sqlite3
 from pathlib import Path
 
+import setproctitle
+
 from penpen.executor import run_claude_command
 from penpen.prompts import prompt_commit, prompt_todo, prompt_task, prompt_run
 
+# プロセス名を設定
+setproctitle.setproctitle("penpen")
+
 DB_PATH = os.environ.get("DB_PATH", os.path.join(os.getcwd(), "penpen.db"))
-SCHEMA_PATH = Path(__file__).parent.parent / "schema.sql"
+SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 
 
 def get_incomplete_subtasks_count(db_path=None):
