@@ -7,11 +7,13 @@ Claude Code を使用したタスク管理・実行ツール
 ### インストールサーバーを使用
 
 ```bash
-# インストール実行
-curl -sSL http://host.docker.internal:10000/install.sh | bash
-
+# インストール実行（Dockerコンテナ内）
+curl -sSL http://host.docker.internal:10000/install.sh | INSTALL_SERVER=http://host.docker.internal:10000 bash
+or
+curl -sSL http://172.17.0.1:10000/install.sh | INSTALL_SERVER=http://172.17.0.1:10000 bash       
+                  
 # 別サーバーから実行する場合
-INSTALL_SERVER=http://your-server:10000 curl -sSL http://your-server:10000/install.sh | bash
+curl -sSL http://your-server:10000/install.sh | INSTALL_SERVER=http://your-server:10000 bash
 ```
 
 ### インストール先
@@ -25,7 +27,7 @@ INSTALL_SERVER=http://your-server:10000 curl -sSL http://your-server:10000/insta
 
 ```bash
 # インストール先を指定
-INSTALL_BASE=/opt/penpen curl -sSL http://host.docker.internal:10000/install.sh | bash
+curl -sSL http://host.docker.internal:10000/install.sh | INSTALL_SERVER=http://host.docker.internal:10000 INSTALL_BASE=/opt/penpen bash
 ```
 
 ### PATH設定
