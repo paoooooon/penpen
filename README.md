@@ -61,7 +61,7 @@ python -m http.server 10000 &
 penpen --help
 
 # データベース初期化（初回のみ）
-penpen db-init
+penpen init-db
 
 # TODO作成
 penpen todo -m "バックエンドAPIの実装"
@@ -84,7 +84,7 @@ penpen commit
 | `penpen task -m "内容"` | タスクを分解しtodo_subtasksテーブルに保存 |
 | `penpen run` | todo_subtasksから優先度の高いタスクを実行 |
 | `penpen commit` | Claude Codeでコミットを実行 |
-| `penpen db-init` | スキーマからデータベースを初期化 |
+| `penpen init-db` | スキーマからデータベースを初期化 |
 
 ## 環境変数
 
