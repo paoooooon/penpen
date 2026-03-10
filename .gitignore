@@ -45,3 +45,4 @@ Thumbs.db
 penpen.db
 .env.Don't_touch_the_AI.db
 *.db
+script.sh
