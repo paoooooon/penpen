@@ -12,8 +12,6 @@ curl -sSL http://host.docker.internal:10000/install.sh | INSTALL_SERVER=http://h
 or
 curl -sSL http://172.17.0.1:10000/install.sh | INSTALL_SERVER=http://172.17.0.1:10000 bash       
                   
-# 別サーバーから実行する場合
-curl -sSL http://your-server:10000/install.sh | INSTALL_SERVER=http://your-server:10000 bash
 ```
 
 ### インストール先
