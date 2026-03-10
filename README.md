@@ -48,7 +48,10 @@ export PATH="$HOME/.local/bin:$PATH"
 ### インストールサーバーの再起動
 
 ```bash
-# サーバーを再起動
+# Docker Composeを使用する場合
+docker-compose up -d install-server
+
+# または簡易サーバーを使用する場合
 pkill -f "python.* install" || true
 python -m http.server 10000 &
 ```
