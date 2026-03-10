@@ -1,73 +1,137 @@
-# Todo API クライアント
+# penpen
 
-Todo管理 API の Python クライアント（非同期 + Pydantic V2 対応）。
-
-## 特徴
-
-- **非同期 (async/await)** 対応 (httpx 使用)
-- **Pydantic V2** による型安全性
-- OpenAPI 仕様から自動生成
+Claude Code を使用したタスク管理・実行ツール
 
 ## インストール
 
-```bash
-pip install httpx httpx[http2] pydantic
-```
-
-## クライアント生成
-
-### コンテナ内で実行する場合
+### インストールサーバーを使用
 
 ```bash
-# OpenAPI 仕様をダウンロード
-make download-spec API_URL=http://172.17.0.1:10000
+# インストール実行
+curl -sSL http://host.docker.internal:10000/install.sh | bash
 
-# クライアントを生成（非同期 + Pydantic V2）
-make generate-client
+# 別サーバーから実行する場合
+INSTALL_SERVER=http://your-server:10000 curl -sSL http://your-server:10000/install.sh | bash
 ```
 
-### コンテナ外から実行する場合 (docker-compose 使用)
+### インストール先
+
+| パス | 内容 |
+|-----|------|
+| `~/.local/share/penpen/` | ソースコード、仮想環境 |
+| `~/.local/bin/penpen` | 実行可能ファイル |
+
+### カスタムインストール先
 
 ```bash
-# OpenAPI 仕様をダウンロード
-docker-compose exec app make download-spec API_URL=http://host.docker.internal:10000
-
-# クライアントを生成
-docker-compose exec app make generate-client
+# インストール先を指定
+INSTALL_BASE=/opt/penpen curl -sSL http://host.docker.internal:10000/install.sh | bash
 ```
 
-## 使用例
+### PATH設定
 
-```python
-import asyncio
-from todo_api_client import AsyncClient
-from todo_api_client.models import ProjectCreate
+インストール後、シェルの設定ファイルに追加：
 
-async def main():
-    async with AsyncClient(base_url="http://172.17.0.1:10000") as client:
-        # ヘルスチェック
-        health = await client.health_health_get()
-        print(health)
-
-        # プロジェクト一覧
-        projects = await client.list_projects_projects_get()
-        for p in projects:
-            print(p)
-
-        # プロジェクト作成
-        new_project = await client.create_project_projects_post(
-            body=ProjectCreate(name="マイプロジェクト", description="サンプルプロジェクト")
-        )
-        print(new_project)
-
-asyncio.run(main())
+```bash
+# ~/.bashrc または ~/.zshrc
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
-## Makefile コマンド
+### ローカル開発用インストール
+
+```bash
+./install.sh
+```
+
+### インストールサーバーの再起動
+
+```bash
+# サーバーを再起動
+pkill -f "python.* install" || true
+python -m http.server 10000 &
+```
+
+## 使い方
+
+```bash
+# ヘルプ表示
+penpen --help
+
+# データベース初期化（初回のみ）
+penpen db-init
+
+# TODO作成
+penpen todo -m "バックエンドAPIの実装"
+
+# タスク分解（サブタスク作成）
+penpen task -m "フロントエンドの実装"
+
+# サブタスク実行
+penpen run
+
+# コミット
+penpen commit
+```
+
+## コマンド一覧
 
 | コマンド | 説明 |
 |---------|------|
-| `make download-spec` | API から OpenAPI 仕様をダウンロード |
-| `make generate-client` | 非同期 Python クライアントを生成 |
-| `make clean` | 生成ファイルを削除 |
-| `make format` | 生成コードをフォーマット |
+| `penpen todo -m "内容"` | TODOを作成しtodosテーブルに保存 |
+| `penpen task -m "内容"` | タスクを分解しtodo_subtasksテーブルに保存 |
+| `penpen run` | todo_subtasksから優先度の高いタスクを実行 |
+| `penpen commit` | Claude Codeでコミットを実行 |
+| `penpen db-init` | スキーマからデータベースを初期化 |
+
+## 環境変数
+
+| 変数 | 説明 | デフォルト |
+|------|------|-----------|
+| `DB_PATH` | データベースファイルのパス | `~/penpen.db` |
+| `API_BASE_URL` | APIのベースURL | `http://172.17.0.1:10000` |
+| `INSTALL_BASE` | インストール先ベースディレクトリ | `~/.local` |
+
+## モジュール構成
+
+```
+src/penpen/
+├── cli.py        # CLIエントリーポイント
+├── executor.py   # 実行レイヤー（Claude Code実行）
+├── prompts.py    # プロンプト生成レイヤー
+└── __main__.py   # python -m penpen 用エントリ
+```
+
+## データベース構成
+
+### テーブル一覧
+
+| テーブル | 説明 |
+|---------|------|
+| `questions` | 質問管理 |
+| `todos` | タスク管理 |
+| `todo_subtasks` | サブタスク管理 |
+
+### todos ステータス
+
+| 値 | 説明 |
+|----|------|
+| `todo` | 未着手 |
+| `in_progress` | 進行中 |
+| `completed` | 完了 |
+| `cancelled` | キャンセル |
+
+## 開発
+
+### セットアップ
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+### テスト実行
+
+```bash
+python -m penpen --help
+```
