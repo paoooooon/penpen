@@ -47,5 +47,9 @@ penpen.db
 *.db
 script.sh
 
+# Environment files
+.env
+.env.*
+
 # Go
 go/penpen
