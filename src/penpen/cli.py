@@ -10,7 +10,7 @@ from pathlib import Path
 from penpen.executor import run_claude_command
 from penpen.prompts import prompt_commit, prompt_todo, prompt_task, prompt_run
 
-DB_PATH = os.environ.get("DB_PATH", "/workspace/penpen.db")
+DB_PATH = os.environ.get("DB_PATH", os.path.join(os.getcwd(), "penpen.db"))
 SCHEMA_PATH = Path(__file__).parent.parent / "schema.sql"
 
 
@@ -87,9 +87,22 @@ def cmd_run(args):
 def main():
     parser = argparse.ArgumentParser(
         prog="penpen",
-        description="APIクライアントツール",
+        usage="penpen {commit,db-init,todo,task,run} ... [-h]",
+        description="Claude Code を使用したタスク管理・実行ツール",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+例:
+  penpen todo -m "バックエンドAPIの実装"    TODOを作成
+  penpen task -m "フロントエンドの実装"     タスクを分解してサブタスク作成
+  penpen run                               サブタスクを実行
+  penpen commit                            コミットを実行
+  penpen db-init                           データベースを初期化
+
+環境変数:
+  DB_PATH         データベースファイルのパス (デフォルト: /workspace/penpen.db)
+        """,
     )
-    subparsers = parser.add_subparsers(dest="command", help="利用可能なコマンド")
+    subparsers = parser.add_subparsers(dest="command", help="利用可能なコマンド", metavar="COMMAND")
 
     # commit サブコマンド
     commit_parser = subparsers.add_parser("commit", help="Claude Codeでコミットを実行")
@@ -102,17 +115,17 @@ def main():
     db_init_parser.set_defaults(func=cmd_db_init)
 
     # todo サブコマンド
-    todo_parser = subparsers.add_parser("todo", help="Claude CodeでTODOを作成")
+    todo_parser = subparsers.add_parser("todo", help="Claude CodeでTODOを作成", description="指定した内容のTODOを作成し、データベースに保存します")
     todo_parser.add_argument("-m", "--message", required=True, help="TODOの内容")
     todo_parser.set_defaults(func=cmd_todo)
 
     # task サブコマンド
-    task_parser = subparsers.add_parser("task", help="Claude Codeでタスクを分解してサブタスクを作成")
+    task_parser = subparsers.add_parser("task", help="Claude Codeでタスクを分解してサブタスクを作成", description="タスクを分解し、todo_subtasksテーブルに保存します")
     task_parser.add_argument("-m", "--message", required=True, help="タスクの内容")
     task_parser.set_defaults(func=cmd_task)
 
     # run サブコマンド
-    run_parser = subparsers.add_parser("run", help="サブタスクを実行")
+    run_parser = subparsers.add_parser("run", help="サブタスクを実行", description="todo_subtasksから未完了のタスクを順に実行します")
     run_parser.set_defaults(func=cmd_run)
 
     args = parser.parse_args()
