@@ -28,6 +28,11 @@ func Task(message string) string {
 これはあなた以外の人が見るので別の人が見返してわかるように客観的にお願いします`, message, env.DBPath(), env.DBPath())
 }
 
+// Raw generates a prompt for raw input
+func Raw(message string) string {
+	return message
+}
+
 // Run generates a prompt for running a subtask
 func Run() string {
 	return fmt.Sprintf(`%sのtodo_subtasksテーブルの中から、優先度の高いものを1つ選んで、実装してください。実装が終わったらステータスの更新をしてください

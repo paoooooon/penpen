@@ -21,6 +21,19 @@ type Command struct {
 // Commands returns available CLI commands
 func Commands() map[string]Command {
 	return map[string]Command{
+		"raw": {
+			Name:        "raw",
+			Description: "Claude Codeで生の入力を実行",
+			Execute: func(args []string) int {
+				if len(args) == 0 {
+					fmt.Fprintln(os.Stderr, "エラー: -m/--message オプションが必要です")
+					return 1
+				}
+				message := args[len(args)-1]
+				prompt := prompts.Raw(message)
+				return executor.RunClaudeCommand(prompt)
+			},
+		},
 		"commit": {
 			Name:        "commit",
 			Description: "Claude Codeでコミットを実行",
